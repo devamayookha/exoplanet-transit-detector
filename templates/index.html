@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A step-by-step look at Kepler light curves and transit signals.">
+  <title>Exoplanet Transit Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="page-header">
+    <p class="eyebrow">A light-curve notebook</p>
+    <h1>Looking for a planet’s shadow</h1>
+    <p class="intro">
+      A planet passing in front of its star briefly dims the light we observe.
+      Follow the measurements from the Kepler mission through a simple transit search.
+    </p>
+    <div class="star-picker">
+      <label for="star-select">Choose a star</label>
+      <select id="star-select" name="star">
+        <option value="kepler8">Kepler-8</option>
+        <option value="kepler6">Kepler-6</option>
+        <option value="control">Control star (KIC 6922277)</option>
+      </select>
+    </div>
+    <p id="load-status" class="status" role="status"></p>
+  </header>
+
+  <main>
+    <section class="analysis-step" aria-labelledby="raw-heading">
+      <p class="step-number">01 / OBSERVATIONS</p>
+      <h2 id="raw-heading">Raw light curve</h2>
+      <p class="step-intro">
+        Each point records the star’s measured brightness at a moment in time.
+        The measurements include both the star’s real variations and instrumental effects.
+      </p>
+      <figure class="chart-figure">
+        <div class="chart-frame">
+          <canvas id="raw-chart" role="img" aria-label="Raw light curve chart">
+            Raw light curve chart.
+          </canvas>
+        </div>
+        <figcaption>Brightness over the observed span, shown as a daily average.</figcaption>
+      </figure>
+    </section>
+
+    <section class="analysis-step" aria-labelledby="clean-heading">
+      <p class="step-number">02 / CLEANING</p>
+      <h2 id="clean-heading">Removing slow changes</h2>
+      <p class="step-intro">
+        Invalid measurements and unusually high outliers are removed, then a rolling
+        baseline is divided out to make the typical brightness close to one.
+        Low points are retained because a transit appears as a dip.
+      </p>
+      <figure class="chart-figure">
+        <div class="chart-frame">
+          <canvas id="cleaned-chart" role="img" aria-label="Cleaned light curve chart">
+            Cleaned light curve chart.
+          </canvas>
+        </div>
+        <figcaption>The cleaned brightness measurements, averaged by day.</figcaption>
+      </figure>
+    </section>
+
+    <section class="analysis-step" aria-labelledby="period-heading">
+      <p class="step-number">03 / PERIOD SEARCH</p>
+      <h2 id="period-heading">Looking for repetition</h2>
+      <p class="step-intro" id="period-caption">
+        The search tests trial periods and scores how strongly a short dim interval
+        stands out when the observations are folded on each period.
+      </p>
+      <figure class="chart-figure">
+        <div class="chart-frame">
+          <canvas id="periodogram-chart" role="img" aria-label="Period search chart">
+            Period search chart.
+          </canvas>
+        </div>
+        <figcaption>Signal score by trial period; the marked peak is the strongest candidate.</figcaption>
+      </figure>
+    </section>
+
+    <section class="analysis-step" aria-labelledby="folded-heading">
+      <p class="step-number">04 / REPEATING DIP</p>
+      <h2 id="folded-heading">Folded transit</h2>
+      <p class="step-intro">
+        Folding the observations on the best period lines up repeated events.
+        The horizontal axis is hours before or after the estimated transit midpoint.
+      </p>
+      <figure class="chart-figure">
+        <div class="chart-frame">
+          <canvas id="folded-chart" role="img" aria-label="Phase-folded transit chart">
+            Phase-folded transit chart.
+          </canvas>
+        </div>
+        <figcaption id="folded-caption">Mean brightness in phase bins around the estimated transit midpoint.</figcaption>
+      </figure>
+    </section>
+
+    <section class="analysis-step comparison-step" aria-labelledby="comparison-heading">
+      <p class="step-number">05 / REFERENCE</p>
+      <h2 id="comparison-heading">Comparison with NASA</h2>
+      <p class="step-intro" id="comparison-caption">
+        The measured period is compared with the published reference period when one
+        is available. The radius ratio is estimated from a simplified box model,
+        which slightly underestimates depth.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption id="comparison-table-caption">Transit search summary</caption>
+          <tbody>
+            <tr><th scope="row">Detected period</th><td id="detected-period">—</td></tr>
+            <tr><th scope="row">NASA period</th><td id="nasa-period">—</td></tr>
+            <tr><th scope="row">Difference from NASA</th><td id="period-difference">—</td></tr>
+            <tr><th scope="row">Estimated transit depth</th><td id="transit-depth">—</td></tr>
+            <tr><th scope="row">Estimated planet-to-star radius ratio</th><td id="radius-ratio">—</td></tr>
+            <tr><th scope="row">Significance</th><td id="significance">—</td></tr>
+            <tr><th scope="row">Half-period alias (P/2) score</th><td id="half-alias">—</td></tr>
+            <tr><th scope="row">Double-period alias (2P) score</th><td id="double-alias">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-note">
+        Reference periods are from the NASA Exoplanet Archive. A weak signal means
+        no significant transit was detected in these analysed observations; it does
+        not establish that the star has no planet.
+      </p>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>A small numerical analysis of Kepler brightness observations.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
