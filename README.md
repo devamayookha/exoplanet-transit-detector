@@ -91,6 +91,13 @@ scripts/             data download and control-star selection
 templates/, static/  the five-step web page
 ```
 
+
+## About This Experiment
+
+This was an independent mini-build created after the seven-project AI coding-tool experiment series. I wanted to explore an astronomy-related idea while learning to work with **GitHub Copilot Chat in VS Code**. It was not part of the seven-tool series or its comparison approach.
+
+The project gave me an opportunity to investigate exoplanet transit detection using Kepler light-curve data while experimenting with an AI-assisted development workflow.
+
 ## 🔮 Possible next steps
 
 - Fit a proper transit shape for a better depth and radius ratio
